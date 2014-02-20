@@ -59,7 +59,7 @@
 #define PLATFORM_AML_IRQ_PIN			PAD_GPIOA_16
 #define PLATFORM_AML_IRQ_NUM			INT_GPIO_0
 
-/* sabrelite config */
+/* rpi config */
 #define PLATFORM_RPI_PWR_PIN                    0//
 #define PLATFORM_RPI_RST_PIN                   	17
 #define PLATFORM_RPI_IRQ_PIN                    4

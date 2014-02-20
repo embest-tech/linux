@@ -32,6 +32,8 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/spi/spi.h>
+#include <linux/spi/ads7846.h>
+#include <linux/gpio.h>
 #include <linux/w1-gpio.h>
 
 #include <linux/version.h>
@@ -586,6 +588,37 @@ static struct platform_device bcm2708_spi_device = {
 	.resource = bcm2708_spi_resources,
 };
 
+#if defined(CONFIG_TOUCHSCREEN_ADS7846) || \
+        defined(CONFIG_TOUCHSCREEN_ADS7846_MODULE)
+static struct ads7846_platform_data ads7846_config = {
+        .x_max                  = 0x0fff,
+        .y_max                  = 0x0fff,
+//        .x_plate_ohms           = 180,
+//        .pressure_max           = 255,
+        .debounce_max           = 10,
+        .debounce_tol           = 5,
+        .debounce_rep           = 1,
+        .gpio_pendown           = 4,
+        .keep_vref_on           = 1,
+};
+
+static struct spi_board_info ads7846_spi_board_info __initdata = {
+        .modalias               = "ads7846",
+        .bus_num                = 0,
+        .chip_select            = 0,
+        .max_speed_hz           = 1500000,
+        .controller_data        = NULL,
+        .irq                    = -EINVAL,
+        .platform_data          = &ads7846_config,
+};
+
+void __init bcm2708_ads7846_init(void)
+{
+        ads7846_spi_board_info.irq = gpio_to_irq(ads7846_config.gpio_pendown);
+        spi_register_board_info(&ads7846_spi_board_info, 1);
+}
+#endif
+
 #ifdef CONFIG_BCM2708_SPIDEV
 static struct spi_board_info bcm2708_spi_devices[] = {
 	{
@@ -601,6 +634,7 @@ static struct spi_board_info bcm2708_spi_devices[] = {
 		.chip_select = 1,
 		.mode = SPI_MODE_0,
 	}
+
 };
 #endif
 
@@ -790,6 +824,10 @@ void __init bcm2708_init(void)
 #ifdef CONFIG_BCM2708_SPIDEV
 	spi_register_board_info(bcm2708_spi_devices,
 			ARRAY_SIZE(bcm2708_spi_devices));
+#endif
+#if defined(CONFIG_TOUCHSCREEN_ADS7846) || \
+        defined(CONFIG_TOUCHSCREEN_ADS7846_MODULE)
+	bcm2708_ads7846_init();
 #endif
 }
 
