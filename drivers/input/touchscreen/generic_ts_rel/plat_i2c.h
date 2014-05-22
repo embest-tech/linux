@@ -13,7 +13,7 @@
 // Defines
 // ****************************************************************************
 /* I2C config */
-#define PLATFORM_I2C_BUS			1	// I2C Bus
+#define PLATFORM_I2C_BUS			0	// I2C Bus
 #define PLATFORM_I2C_ADDR			0x01
 #define PLATFORM_I2C_SPEED			400000
 
