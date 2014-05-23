@@ -598,7 +598,7 @@ static struct ads7846_platform_data ads7846_config = {
         .debounce_max           = 10,
         .debounce_tol           = 5,
         .debounce_rep           = 1,
-        .gpio_pendown           = 4,
+        .gpio_pendown           = 21,
         .keep_vref_on           = 1,
 };
 
