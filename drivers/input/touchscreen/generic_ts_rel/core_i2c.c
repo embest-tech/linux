@@ -629,7 +629,13 @@ static
 void core_shutdown(struct i2c_client *client)
 {
 	struct struct_core_i2c_var *core_data = i2c_get_clientdata(client);
-	char *buf = (char*)core_data->cdata->pts_data;
+	char* buf;
+
+	if (core_data == NULL) {
+		return;
+	}
+
+	buf = (char*)core_data->cdata->pts_data;
 
 	PRINT_CORE_MSG("%s: >>>>>>>>>>>>>>>>>>>\n", __FUNCTION__);
 
@@ -643,7 +649,13 @@ static
 int core_suspend(struct i2c_client *client, pm_message_t mesg)
 {
 	struct struct_core_i2c_var *core_data = i2c_get_clientdata(client);
-	char *buf = (char*)core_data->cdata->pts_data;
+	char *buf;
+
+	if (core_data == NULL) {
+		return 0;
+	}
+
+	buf = (char*)core_data->cdata->pts_data;
 
 	PRINT_CORE_MSG("%s: >>>>>>>>>>>>>>>>>>>\n", __FUNCTION__);
 
@@ -670,6 +682,11 @@ static
 int core_resume(struct i2c_client *client)
 {
 	struct struct_core_i2c_var *core_data = i2c_get_clientdata(client);
+
+	if (core_data == NULL) {
+		return 0;
+	}
+
 
 	PRINT_CORE_MSG("%s: >>>>>>>>>>>>>>>>>>>\n", __FUNCTION__);
 
@@ -712,6 +729,10 @@ int __devexit core_remove(struct i2c_client *client)
 	struct struct_core_i2c_var *core_data = i2c_get_clientdata(client);
 
 	PRINT_CORE_MSG("%s: >>>>>>>>>>>>>>>>>>>\n", __FUNCTION__);
+
+	if ( core_data == NULL) {
+                return 0;
+	}
 
 	free_irq(core_data->pdata->i2c->irq, core_data);
 	cancel_work_sync(&core_data->event_work);
