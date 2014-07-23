@@ -593,13 +593,15 @@ static struct platform_device bcm2708_spi_device = {
 static struct ads7846_platform_data ads7846_config = {
         .x_max                  = 0x0fff,
         .y_max                  = 0x0fff,
-//        .x_plate_ohms           = 180,
-//        .pressure_max           = 255,
+        .x_plate_ohms           = 400,
+        .pressure_max           = 65535,
         .debounce_max           = 10,
-        .debounce_tol           = 5,
-        .debounce_rep           = 1,
+        .debounce_tol           = 10,
+        .debounce_rep           = 3,
         .gpio_pendown           = 21,
         .keep_vref_on           = 1,
+	.settle_delay_usecs	= 150,
+	.wakeup			= true,
 };
 
 static struct spi_board_info ads7846_spi_board_info __initdata = {

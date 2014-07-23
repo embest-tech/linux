@@ -648,6 +648,7 @@ static int ads7846_debounce_filter(void *ads, int data_idx, int *val)
 	struct ads7846 *ts = ads;
 
 	if (!ts->read_cnt || (abs(ts->last_read - *val) > ts->debounce_tol)) {
+		printk("s");
 		/* Start over collecting consistent readings. */
 		ts->read_rep = 0;
 		/*
@@ -669,6 +670,7 @@ static int ads7846_debounce_filter(void *ads, int data_idx, int *val)
 			return ADS7846_FILTER_IGNORE;
 		}
 	} else {
+		printk("%d", ts->read_rep);
 		if (++ts->read_rep > ts->debounce_rep) {
 			/*
 			 * Got a good reading for this coordinate,
@@ -702,7 +704,7 @@ static int ads7846_get_value(struct ads7846 *ts, struct spi_message *m)
 		 * adjust:  on-wire is a must-ignore bit, a BE12 value, then
 		 * padding; built from two 8 bit values written msb-first.
 		 */
-		return be16_to_cpup((__be16 *)t->rx_buf) >> /*3*/4;	//embest
+		return be16_to_cpup((__be16 *)t->rx_buf) >> 3;
 	}
 }
 
@@ -742,6 +744,7 @@ static void ads7846_read_state(struct ads7846 *ts)
 		if (msg_idx < ts->msg_count - 1) {
 
 			val = ads7846_get_value(ts, m);
+			val &= ~7;
 
 			action = ts->filter(ts->filter_data, msg_idx, &val);
 			switch (action) {
